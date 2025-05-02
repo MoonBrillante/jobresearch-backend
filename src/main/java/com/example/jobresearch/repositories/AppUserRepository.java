@@ -1,4 +1,4 @@
-package com.example.jobresearch.infra.repositories;
+package com.example.jobresearch.repositories;
 
 import com.example.jobresearch.domain.models.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;

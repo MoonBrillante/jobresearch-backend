@@ -28,28 +28,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    /*public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
-        UsernamePasswordAuthenticationToken creds =
-                new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password());
 
-        Authentication auth = authenticationManager.authenticate(creds);
-
-        // Get the user's role information
-        //List<GrantedAuthority> roles = (List<GrantedAuthority>) auth.getAuthorities();
-        List<GrantedAuthority> roles = new ArrayList<>(auth.getAuthorities());
-
-
-        // Generate a JWT token with role information
-        String jwts = jwtService.getToken(auth.getName(), roles);
-
-        // Build the response with the JWT token
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
-                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-                .build();
-    }
-
-}*/
     public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
         try {
             UsernamePasswordAuthenticationToken creds =

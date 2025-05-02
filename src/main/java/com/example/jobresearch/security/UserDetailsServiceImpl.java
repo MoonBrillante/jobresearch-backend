@@ -2,7 +2,7 @@ package com.example.jobresearch.security;
 
 
 import com.example.jobresearch.domain.models.AppUser;
-import com.example.jobresearch.infra.repositories.AppUserRepository;
+import com.example.jobresearch.repositories.AppUserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,20 +25,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<AppUser> user = repository.findByUsername(username);
 
         User.UserBuilder builder = null;
-        /*if (user.isPresent()) {
-            AppUser currentUser = user.get();
-            builder = org.springframework.security.core.userdetails.User.withUsername(username);
-            builder.password(currentUser.getPassword());
-            builder.roles(currentUser.getRoleName());
-        } else {
-            throw new UsernameNotFoundException("User not found.");
-        }
-        return builder.build();*/
+
         if (user.isPresent()) {
             AppUser currentUser = user.get();
             builder = User.withUsername(username);
             builder.password(currentUser.getPassword());
-            builder.roles(currentUser.getRoleName()); // 必须是 "USER" / "ADMIN" 这种
+            builder.roles(currentUser.getRoleName());
         } else {
             throw new UsernameNotFoundException("User not found.");
         }

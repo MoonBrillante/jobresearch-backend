@@ -1,7 +1,6 @@
 package com.example.jobresearch.domain.models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.example.jobresearch.domain.services;
 
 import com.example.jobresearch.domain.models.Job;
-import com.example.jobresearch.infra.repositories.JobRepository;
+import com.example.jobresearch.repositories.JobRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;

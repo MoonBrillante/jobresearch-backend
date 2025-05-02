@@ -1,9 +1,6 @@
 package com.example.jobresearch.config;
 
-
 import com.example.jobresearch.security.JWTAuthorizationFilter;
-import com.example.jobresearch.security.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,7 +23,6 @@ public class SecurityConfig {
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
 
-
     public SecurityConfig(JWTAuthorizationFilter jwtAuthorizationFilter) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
@@ -38,12 +33,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS config
                 .csrf(csrf -> csrf.disable())  // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  //Stateless session
-                .formLogin(form -> form.disable())    // 加这一行！！
+                .formLogin(form -> form.disable())    // Disable Spring Security's default form login functionality.
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()  // Allow everyone to access /login
-                        //.requestMatchers(HttpMethod.GET, "/api/jobs").permitAll() // 允许前端直接访问 /api/jobs
                         .requestMatchers(HttpMethod.GET, "/api/jobs").hasAnyRole("USER", "ADMIN")  // Protect /api/jobs
+                        .requestMatchers(HttpMethod.POST, "/api/jobs/**").hasRole("ADMIN")           // Only ADMIN can add new jobs
+                        .requestMatchers(HttpMethod.PUT, "/api/jobs/**").hasRole("ADMIN")            // Only ADMIN can edit job
+                        .requestMatchers(HttpMethod.DELETE, "/api/jobs/**").hasRole("ADMIN")         // Only ADMIN can delete job
                         .anyRequest().authenticated()  // Other requests require authentication
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);  // Add JWt filter to filter chain
@@ -65,7 +62,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        String allowedOrigin = System.getenv().getOrDefault("FRONTEND_ORIGIN", "http://localhost:5173");
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
