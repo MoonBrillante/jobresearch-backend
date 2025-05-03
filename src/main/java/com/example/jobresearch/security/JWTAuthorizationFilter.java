@@ -78,6 +78,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             System.out.println("Invalid JWT Token: " + e.getMessage());
             System.out.println("JWT Secret Key: " + SECRET_KEY);
             System.out.println("JWT Token: " + token);
+            System.out.println("JWT filter reached path: " + request.getRequestURI());
         }
 
 

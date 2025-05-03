@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/jobs/**").hasRole("ADMIN")           // Only ADMIN can add new jobs
                         .requestMatchers(HttpMethod.PUT, "/api/jobs/**").hasRole("ADMIN")            // Only ADMIN can edit job
                         .requestMatchers(HttpMethod.DELETE, "/api/jobs/**").hasRole("ADMIN")         // Only ADMIN can delete job
+                        .requestMatchers(HttpMethod.POST, "/api/import").permitAll()
                         .anyRequest().authenticated()  // Other requests require authentication
                 )
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);  // Add JWt filter to filter chain
