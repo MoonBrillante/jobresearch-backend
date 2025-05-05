@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()  // Allow everyone to access /login
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/jobs").hasAnyRole("USER", "ADMIN")  // Protect /api/jobs
                         .requestMatchers(HttpMethod.POST, "/api/jobs/**").hasRole("ADMIN")           // Only ADMIN can add new jobs
                         .requestMatchers(HttpMethod.PUT, "/api/jobs/**").hasRole("ADMIN")            // Only ADMIN can edit job
