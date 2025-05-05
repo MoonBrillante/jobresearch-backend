@@ -34,8 +34,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if ("/login".equals(path)) {
-            // 登录接口直接放行，不校验Token
+        if ("/login".equals(path) || "/health".equals(path)) {
+            // Login and health check interfaces are directly released
             chain.doFilter(request, response);
             return;
         }
