@@ -34,6 +34,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
+        System.out.println("Incoming path: " + request.getServletPath());
+
         if ("/login".equals(path) || "/health".equals(path)) {
             // Login and health check interfaces are directly released
             chain.doFilter(request, response);
