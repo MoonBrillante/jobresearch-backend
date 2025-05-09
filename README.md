@@ -41,7 +41,7 @@ Jobresearch is a Spring Boot backend application for managing and tracking job a
 ## 🔗 Swagger Documentation
 
 - Local: `http://localhost:8080/swagger-ui/index.html`
-- Deployed: [`https://your-app.onrender.com/swagger-ui/index.html`](https://your-app.onrender.com)
+- Deployed: [`https://jobresearch-backend.onrender.com`]
 
 
 ---
