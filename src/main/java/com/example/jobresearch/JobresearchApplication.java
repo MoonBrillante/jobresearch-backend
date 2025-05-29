@@ -35,7 +35,6 @@ public class JobresearchApplication {
 				userRepository.save(user1);
 				userRepository.save(user2);
 
-
 			}
 		};
 	}
