@@ -32,7 +32,7 @@ public class LoginController {
     public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
         try {
             UsernamePasswordAuthenticationToken creds =
-                    new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password());
+                    new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());
 
             Authentication auth = authenticationManager.authenticate(creds);
 
