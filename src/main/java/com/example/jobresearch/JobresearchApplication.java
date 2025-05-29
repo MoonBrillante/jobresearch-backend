@@ -35,6 +35,9 @@ public class JobresearchApplication {
 				userRepository.save(user1);
 				userRepository.save(user2);
 
+				System.out.println("🔐 DB_PASSWORD length: " + System.getenv("DB_PASSWORD").length());
+
+
 			}
 		};
 	}
