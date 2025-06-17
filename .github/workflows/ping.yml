@@ -2,7 +2,7 @@ name: Keep Render Alive
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # 每 2 小时 ping 一次
+    - cron: '0 * * * *'  # 每小时一次
   workflow_dispatch:
 
 jobs:
