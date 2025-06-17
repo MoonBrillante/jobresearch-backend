@@ -2,21 +2,20 @@ name: Keep Render Alive
 
 on:
   schedule:
-    - cron: '0 * * * *'  # 每小时运行一次
+    - cron: '0 * * * *'  # 每小时一次
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Curl and check status
+      - name: Curl and retry if needed
         run: |
-          echo "Pinging backend..."
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://jobresearch-backend.onrender.com)
-          echo "HTTP Status: $STATUS"
+          echo "🌐 Pinging /health endpoint..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://jobresearch-backend.onrender.com/health)
+          echo "🔁 First attempt HTTP Status: $STATUS"
+
           if [ "$STATUS" -ne 200 ]; then
-            echo "❌ Backend not OK!"
-            exit 1
-          else
-            echo "✅ Backend is alive."
-          fi
+            echo "⏳ Waiting 20s and retrying..."
+            sleep 20
+            STATUS=$(curl -s -o /dev/nu
