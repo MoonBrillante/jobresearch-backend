@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import io.swagger.v3.oas.annotations.*;
+import org.springframework.data.domain.Page;
 
 /**
  * JobController
@@ -32,6 +33,23 @@ public class JobController {
     @GetMapping
     public List<Job> getAllJobs() {
         return jobService.getAllJobs();
+    }
+
+    // search jobs with paginatioin and sorting
+    @Operation(
+            summary = "Search jobs with pagination and sorting",
+            description = "Returns paginated job listings for the JobList page."
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated jobs")
+    @GetMapping("/search")
+    public ResponseEntity<Page<Job>> searchJobs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "postedDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ){
+        Page<Job> jobs = jobService.searchJobs(page, size, sortBy, sortDir);
+        return ResponseEntity.ok(jobs);
     }
 
     // get Job depend on ID
