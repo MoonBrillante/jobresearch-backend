@@ -1,6 +1,6 @@
-# 📋 Jobresearch API
+# 📋 Job Market Tracker API
 
-Jobresearch is a Spring Boot backend application for managing and tracking job applications. It supports secure JWT-based authentication, role-based access control, and complete CRUD operations. The backend is packaged as a Docker container, deployed via Render, and integrates with PostgreSQL. 
+Job Market Tracker API is a Spring Boot backend for managing job opportunities, tracking application status, and providing data for the frontend dashboard. It supports JWT-based authentication, role-based access control, and CRUD operations for job records. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
 
 ---
 
