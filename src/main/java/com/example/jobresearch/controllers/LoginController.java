@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +41,7 @@ public class LoginController {
             String jwts = jwtService.getToken(auth.getName(), roles);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
+                    .header(HttpHeaders.AUTHORIZATION, jwts)
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                     .build();
         } catch (AuthenticationException ex) {
