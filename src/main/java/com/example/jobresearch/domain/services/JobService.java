@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class JobService {
     private final JobRepository jobRepository;
@@ -17,12 +18,10 @@ public class JobService {
         this.jobRepository = jobRepository;
     }
 
-    // get all Job
     public List<Job> getAllJobs() {
         return jobRepository.findAll();
     }
 
-    // Add a new Job
     public Job createJob(Job job) {
         return jobRepository.save(job);
     }
@@ -30,7 +29,6 @@ public class JobService {
     public Optional<Job> getJobById(Long id) {
         return jobRepository.findById(id);
     }
-
 
     public Job updateJob(Long id, Job updatedJob){
         return jobRepository.findById(id)
@@ -50,7 +48,6 @@ public class JobService {
                     return jobRepository.save(existingJob);
                 })
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
-
     }
 
     public Page<Job> searchJobs(int page, int size, String sortBy, String sortDir) {
@@ -63,12 +60,13 @@ public class JobService {
         return jobRepository.findAll(pageable);
     }
 
-
     public void deleteJob(Long id) {
+        if (!jobRepository.existsById(id)){
+            throw new RuntimeException("Job not found with id: " + id);
+        }
 
         jobRepository.deleteById(id);
     }
-
 }
 
 

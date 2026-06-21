@@ -27,7 +27,6 @@ public class JobController {
         this.jobService = jobService;
     }
 
-    //get all Job
     @Operation(summary = "Get all job listings", description = "Returns a list of all jobs.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     @GetMapping
@@ -35,7 +34,7 @@ public class JobController {
         return jobService.getAllJobs();
     }
 
-    // search jobs with paginatioin and sorting
+    // search jobs with pagination and sorting
     @Operation(
             summary = "Search jobs with pagination and sorting",
             description = "Returns paginated job listings for the JobList page."
@@ -52,7 +51,6 @@ public class JobController {
         return ResponseEntity.ok(jobs);
     }
 
-    // get Job depend on ID
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
         return jobService.getJobById(id)
@@ -60,18 +58,17 @@ public class JobController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // create Job
     @Operation(summary = "Create a new job", description = "Add a new job to the system.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Job created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
-    public Job createJob(@RequestBody Job job) {
-        return jobService.createJob(job);
+    public ResponseEntity<Job> createJob(@RequestBody Job job) {
+        Job createdJob = jobService.createJob(job);
+        return ResponseEntity.status(201).body(createdJob);
     }
 
-    // update Job
     @PutMapping("/{id}")
     public ResponseEntity<Job> updateJob(@PathVariable Long id, @RequestBody Job job) {
         try {
@@ -81,10 +78,13 @@ public class JobController {
         }
     }
 
-    // delete Job
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
-        jobService.deleteJob(id);
-        return ResponseEntity.noContent().build();
+        try {
+            jobService.deleteJob(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
