@@ -21,7 +21,6 @@ public class Job {
     private String company;
     private String location;
 
-    //@ElementCollection
     @ElementCollection
     @CollectionTable(name = "job_skills", joinColumns = @JoinColumn(name = "job_id"))
     @Column(name = "skill")
@@ -30,7 +29,7 @@ public class Job {
     @ElementCollection
     private List<String> tools;
 
-    private String mode; //Remote, Hybrid, Onsite
+    private String mode;
 
 
     private String description;
@@ -42,7 +41,7 @@ public class Job {
     @Column(nullable = true)
     private JobStatus status;
 
-    private String source; // example: Linkedin etc
+    private String source;
     @Column(nullable = true)
     private LocalDate postedDate;
 
