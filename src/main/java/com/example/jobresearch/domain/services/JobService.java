@@ -50,7 +50,7 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
     }
 
-    public Page<Job> searchJobs(int page, int size, String sortBy, String sortDir) {
+    public Page<Job> getPaginatedJobs(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();

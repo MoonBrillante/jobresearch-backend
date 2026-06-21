@@ -34,20 +34,20 @@ public class JobController {
         return jobService.getAllJobs();
     }
 
-    // search jobs with pagination and sorting
+    // get paginated jobs with sorting
     @Operation(
-            summary = "Search jobs with pagination and sorting",
+            summary = "Get paginated jobs with sorting",
             description = "Returns paginated job listings for the JobList page."
     )
     @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated jobs")
-    @GetMapping("/search")
-    public ResponseEntity<Page<Job>> searchJobs(
+    @GetMapping("/page")
+    public ResponseEntity<Page<Job>> getPaginatedJobs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "postedDate") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir
     ){
-        Page<Job> jobs = jobService.searchJobs(page, size, sortBy, sortDir);
+        Page<Job> jobs = jobService.getPaginatedJobs(page, size, sortBy, sortDir);
         return ResponseEntity.ok(jobs);
     }
 
