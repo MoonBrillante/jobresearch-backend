@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import com.example.jobresearch.domain.models.JobStatus;
+import com.example.jobresearch.repositories.JobSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,15 +53,42 @@ public class JobService {
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
     }
 
-    public Page<Job> getPaginatedJobs(int page, int size, String sortBy, String sortDir) {
+
+    private String validateSortBy(String sortBy) {
+        List<String> allowedFields = List.of(
+                "postedDate",
+                "position",
+                "company",
+                "location",
+                "status",
+                "source"
+        );
+
+        if (allowedFields.contains(sortBy)) {
+            return sortBy;
+        }
+
+        return "postedDate";
+    }
+
+    public Page<Job> getFilteredJobs(
+            int page, int size, String sortBy, String sortDir,
+            String position, String company, String location,
+            String mode, JobStatus status
+    ) {
+        String validatedSortBy = validateSortBy(sortBy);
+
         Sort sort = sortDir.equalsIgnoreCase("asc")
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
+                ? Sort.by(validatedSortBy).ascending()
+                : Sort.by(validatedSortBy).descending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return jobRepository.findAll(pageable);
+        Specification<Job> spec = JobSpecification.filterBy(position, company, location, mode, status);
+
+        return jobRepository.findAll(spec, pageable);
     }
+
 
     public void deleteJob(Long id) {
         if (!jobRepository.existsById(id)){

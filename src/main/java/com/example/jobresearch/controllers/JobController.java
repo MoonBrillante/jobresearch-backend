@@ -2,6 +2,7 @@ package com.example.jobresearch.controllers;
 
 import com.example.jobresearch.domain.models.Job;
 import com.example.jobresearch.domain.services.JobService;
+import com.example.jobresearch.domain.models.JobStatus;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,22 +35,28 @@ public class JobController {
         return jobService.getAllJobs();
     }
 
-    // get paginated jobs with sorting
+
     @Operation(
-            summary = "Get paginated jobs with sorting",
-            description = "Returns paginated job listings for the JobList page."
+            summary = "Get filtered jobs by column",
+            description = "Returns paginated job listings filtered by individual columns (position, company, location, mode, status)."
     )
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated jobs")
-    @GetMapping("/page")
-    public ResponseEntity<Page<Job>> getPaginatedJobs(
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered jobs")
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Job>> getFilteredJobs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "postedDate") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDir
-    ){
-        Page<Job> jobs = jobService.getPaginatedJobs(page, size, sortBy, sortDir);
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String company,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String mode,
+            @RequestParam(required = false) JobStatus status
+    ) {
+        Page<Job> jobs = jobService.getFilteredJobs(page, size, sortBy, sortDir, position, company, location, mode, status);
         return ResponseEntity.ok(jobs);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
