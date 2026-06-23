@@ -1,6 +1,7 @@
 # 📋 Job Research Application
 
-Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, and description. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, and CRUD operations for job records. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
+Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, and description. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, CRUD operations, paginated job retrieval, backend sorting, and field-based dynamic filtering using Spring Data JPA Specification. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
+
 
 ---
 
@@ -9,10 +10,9 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 - **Java 17**
 - **Spring Boot**
 - **Spring Security + JWT**
-- **PostgreSQL**
+- **PostgreSQL (hosted on Supabase)**
+- **Spring Data JPA for pagination, sorting, and Specification-based filtering**
 - **Maven**
-- **Docker**
-- **Swagger (SpringDoc)**
 - **CORS Configuration** (for frontend integration)
 
 ---
@@ -28,31 +28,48 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 
 ## 📦 REST API Overview
 
-| Method | Endpoint            | Access    | Description              |
-|--------|---------------------|-----------|--------------------------|
-| POST   | `/login`            | Public    | Authenticates user       |
-| GET    | `/api/jobs`         | USER/ADMIN | Retrieve job list       |
-| POST   | `/api/jobs`         | ADMIN     | Create new job entry     |
-| PUT    | `/api/jobs/{id}`    | ADMIN     | Update existing job      |
-| DELETE | `/api/jobs/{id}`    | ADMIN     | Delete job entry         |
+| Method | Endpoint           | Access    | Description              |
+|--------|--------------------|-----------|--------------------------|
+| POST   | `/login`           | Public    | Authenticates user and returns JWT token      |
+| GET    | `/api/jobs/filter` | USER/ADMIN | Retrieve paginated job list with sorting and field-based filtering       |
+| POST   | `/api/jobs`        | ADMIN     | Create new job entry     |
+| PUT    | `/api/jobs/{id}`   | ADMIN     | Update existing job      |
+| DELETE | `/api/jobs/{id}`   | ADMIN     | Delete job entry         |
 
 ---
 
-## 🔗 Swagger Documentation
+---
+### Job List Query Parameters
 
-- Local: `http://localhost:8080/swagger-ui/index.html`
+The `/api/jobs/filter` endpoint supports pagination, sorting, and field-based filtering.
+
+Example:
+
+```http
+GET /api/jobs/filter?page=0&size=10&sortBy=postedDate&sortDir=desc&position=frontend&company=supabase&location=remote&mode=Remote&status=APPLIED
+```
+
+
+| Parameter  | Description                     |
+| ---------- | ------------------------------- |
+| `page`     | Page number, starting from 0    |
+| `size`     | Number of records per page      |
+| `sortBy`   | Field used for sorting          |
+| `sortDir`  | Sort direction: `asc` or `desc` |
+| `position` | Filter jobs by position/title   |
+| `company`  | Filter jobs by company name     |
+| `location` | Filter jobs by location         |
+| `mode`     | Filter jobs by work mode        |
+| `status`   | Filter jobs by job status       |
+
+---
+
+---
+
+## 🚀 Deployment
+
+The backend is deployed on Render, with PostgreSQL hosted on Supabase.
 - Deployed: [`https://jobresearch-backend.onrender.com`]
 
-
 ---
 
-## 🐳 Docker Deployment
-
-1. Build the JAR:
-   ```bash
-   mvn clean package -DskipTests
-
-2. Run the container:
-   ```bash 
-   docker build -t jobresearch 
-   docker run -p 8080:8080 jobresearch
