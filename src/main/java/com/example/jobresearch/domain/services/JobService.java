@@ -46,6 +46,10 @@ public class JobService {
                     existingJob.setBenefits(updatedJob.getBenefits());
                     existingJob.setStatus(updatedJob.getStatus());
                     existingJob.setSource(updatedJob.getSource());
+                    existingJob.setUrl(updatedJob.getUrl());
+                    existingJob.setSalary(updatedJob.getSalary());
+                    existingJob.setExternalJobId(updatedJob.getExternalJobId());
+                    existingJob.setScrapedFrom(updatedJob.getScrapedFrom());
                     existingJob.setPostedDate(updatedJob.getPostedDate());
                     existingJob.setNotes(updatedJob.getNotes());
                     return jobRepository.save(existingJob);
