@@ -32,9 +32,10 @@ public class Job {
     private String mode;
 
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-
+    @Column(columnDefinition = "TEXT")
     private String benefits;
 
     @Enumerated(EnumType.STRING)
@@ -42,16 +43,30 @@ public class Job {
     private JobStatus status;
 
     private String source;
+
+    @Column(columnDefinition = "TEXT")
+    private String url;
+
+    @Column(columnDefinition = "TEXT")
+    private String salary;
+
+    @Column(name = "external_job_id")
+    private String externalJobId;
+
+    @Column(name = "scraped_from")
+    private String scrapedFrom;
+
     @Column(nullable = true)
     private LocalDate postedDate;
 
+    @Column(columnDefinition = "TEXT")
     private String notes;
 
     public Job() {
     }
 
 
-    public Job(Long id, String position, String company, String location, List<String> skills, List<String> tools, String mode, String description, String benefits, JobStatus status, String source, LocalDate postedDate, String notes) {
+    public Job(Long id, String position, String company, String location, List<String> skills, List<String> tools, String mode, String description, String benefits, JobStatus status, String source, String url, String salary, String externalJobId, String scrapedFrom, LocalDate postedDate, String notes) {
         this.id = id;
         this.position = position;
         this.company = company;
@@ -63,11 +78,15 @@ public class Job {
         this.benefits = benefits;
         this.status = status;
         this.source = source;
+        this.url = url;
+        this.salary = salary;
+        this.externalJobId = externalJobId;
+        this.scrapedFrom = scrapedFrom;
         this.postedDate = postedDate;
         this.notes = notes;
     }
 
-    public Job(String position, String company, String location, List<String> skills, List<String> tools, String mode, String description, String benefits, JobStatus status, String source, LocalDate postedDate, String notes) {
+    public Job(String position, String company, String location, List<String> skills, List<String> tools, String mode, String description, String benefits, JobStatus status, String source, String url, String salary, String externalJobId, String scrapedFrom, LocalDate postedDate, String notes) {
         this.position = position;
         this.company = company;
         this.location = location;
@@ -78,6 +97,10 @@ public class Job {
         this.benefits = benefits;
         this.status = status;
         this.source = source;
+        this.url = url;
+        this.salary = salary;
+        this.externalJobId = externalJobId;
+        this.scrapedFrom = scrapedFrom;
         this.postedDate = postedDate;
         this.notes = notes;
     }
@@ -168,6 +191,38 @@ public class Job {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getSalary() {
+        return salary;
+    }
+
+    public void setSalary(String salary) {
+        this.salary = salary;
+    }
+
+    public String getExternalJobId() {
+        return externalJobId;
+    }
+
+    public void setExternalJobId(String externalJobId) {
+        this.externalJobId = externalJobId;
+    }
+
+    public String getScrapedFrom() {
+        return scrapedFrom;
+    }
+
+    public void setScrapedFrom(String scrapedFrom) {
+        this.scrapedFrom = scrapedFrom;
     }
 
     public LocalDate getPostedDate() {
