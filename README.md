@@ -1,6 +1,6 @@
 # 📋 Job Research Application
 
-Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, and description. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, CRUD operations, paginated job retrieval, backend sorting, and field-based dynamic filtering using Spring Data JPA Specification. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
+Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, description, application URL, salary, and source/origin tracking. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, CRUD operations, paginated job retrieval, backend sorting, and field-based dynamic filtering using Spring Data JPA Specification. Job records are populated both through manual entry from the frontend and through an automated n8n scraping pipeline. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
 
 
 ---
@@ -28,16 +28,31 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 
 ## 📦 REST API Overview
 
-| Method | Endpoint           | Access    | Description              |
-|--------|--------------------|-----------|--------------------------|
-| POST   | `/login`           | Public    | Authenticates user and returns JWT token      |
-| GET    | `/api/jobs/filter` | USER/ADMIN | Retrieve paginated job list with sorting and field-based filtering       |
-| POST   | `/api/jobs`        | ADMIN     | Create new job entry     |
-| PUT    | `/api/jobs/{id}`   | ADMIN     | Update existing job      |
-| DELETE | `/api/jobs/{id}`   | ADMIN     | Delete job entry         |
+| Method | Endpoint           | Access     | Description                                                                        |
+| ------ | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| POST   | `/login`           | Public     | Authenticates user and returns JWT token                                           |
+| GET    | `/health`          | Public     | Lightweight health check, used to wake the backend from idle on Render's free tier |
+| GET    | `/api/jobs/filter` | USER/ADMIN | Retrieve paginated job list with sorting and field-based filtering                 |
+| POST   | `/api/jobs`        | ADMIN      | Create new job entry                                                               |
+| PUT    | `/api/jobs/{id}`   | ADMIN      | Update existing job                                                                |
+| DELETE | `/api/jobs/{id}`   | ADMIN      | Delete job entry                                                                   |
 
 ---
 
+## 🤖 Automated Job Ingestion (n8n)
+In addition to manual entry through the frontend, job records are written to this backend by an external n8n workflow that scrapes multiple job boards (Jooble, WeWorkRemotely, RemoteOK, Remotive, Himalayas) on a schedule.
+
+
+- The workflow authenticates against POST /login like any other client, then calls POST /api/jobs for each newly discovered listing
+- Source-tracking fields distinguish how a record entered the system:
+
+  - source: the channel a person used to find or apply to a job (e.g. LinkedIn, Indeed, Referral), populated through manual entry
+  - scrapedFrom: the automated platform a record was scraped from (e.g. jooble, wwr, remoteok), populated by the n8n pipeline
+  - externalJobId: the identifier of the listing on its original platform, used by the workflow to avoid creating duplicate records across runs
+
+
+
+- The GET /health endpoint exists specifically to support this integration: since the backend can spin down when idle on Render's free tier, the workflow pings this endpoint with retries before authenticating, so a cold backend doesn't cause a scheduled run to fail
 ---
 ### Job List Query Parameters
 
@@ -63,6 +78,8 @@ GET /api/jobs/filter?page=0&size=10&sortBy=postedDate&sortDir=desc&position=fron
 | `status`   | Filter jobs by job status       |
 
 ---
+
+Additional job fields — `url`, `salary`, `externalJobId`, and `scrapedFrom` — are stored and returned on every job record, but are not currently exposed as filter parameters on this endpoint.
 
 ---
 
