@@ -43,7 +43,7 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 In addition to manual entry through the frontend, job records are written to this backend by an external n8n workflow that scrapes multiple job boards (Jooble, WeWorkRemotely, RemoteOK, Remotive, Himalayas) on a schedule.
 
 
-- The workflow authenticates against POST /login like any other client, then calls POST /api/jobs for each newly discovered listing
+- The workflow authenticates against POST /login like any other client, then calls POST /api/jobs for each newly discovered listing.
 - The n8n integration uses the following fields:
 
   - scrapedFrom`: the platform from which the job listing was collected
@@ -52,7 +52,7 @@ In addition to manual entry through the frontend, job records are written to thi
 
 
 
-- The GET /health endpoint exists specifically to support this integration: since the backend can spin down when idle on Render's free tier, the workflow pings this endpoint with retries before authenticating, so a cold backend doesn't cause a scheduled run to fail
+- The GET /health endpoint exists specifically to support this integration: since the backend can spin down when idle on Render's free tier, the workflow pings this endpoint with retries before authenticating, so a cold backend doesn't cause a scheduled run to fail.
 ---
 ### Job List Query Parameters
 
