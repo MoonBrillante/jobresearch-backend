@@ -44,11 +44,11 @@ In addition to manual entry through the frontend, job records are written to thi
 
 
 - The workflow authenticates against POST /login like any other client, then calls POST /api/jobs for each newly discovered listing
-- Source-tracking fields distinguish how a record entered the system:
+- The n8n integration uses the following fields:
 
-  - source: the channel a person used to find or apply to a job (e.g. LinkedIn, Indeed, Referral), populated through manual entry
-  - scrapedFrom: the automated platform a record was scraped from (e.g. jooble, wwr, remoteok), populated by the n8n pipeline
-  - externalJobId: the identifier of the listing on its original platform, used by the workflow to avoid creating duplicate records across runs
+  - scrapedFrom`: the platform from which the job listing was collected
+    (e.g. Jooble, We Work Remotely, RemoteOK), populated by the n8n pipeline.
+  - externalJobId: the identifier of the listing on its original platform, used by the workflow to avoid creating duplicate records across runs.
 
 
 
