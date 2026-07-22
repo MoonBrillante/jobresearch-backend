@@ -1,11 +1,11 @@
-# 📋 Job Research Application
+# 💻 Job Research Application
 
 Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, description, application URL, salary, and source/origin tracking. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, CRUD operations, paginated job retrieval, backend sorting, and field-based dynamic filtering using Spring Data JPA Specification. Job records are populated both through manual entry from the frontend and through an automated n8n scraping pipeline. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
 
 
 ---
 
-## 🚀 Tech Stack
+## 🧱 Tech Stack
 
 - **Java 17**
 - **Spring Boot**
@@ -83,7 +83,7 @@ Additional job fields — `url`, `salary`, `externalJobId`, and `scrapedFrom` �
 
 ---
 
-## Testing
+## 🧩 Testing
 
 This project includes tests for `JobService`, `JwtService`, `JWTAuthorizationFilter`, and `JobController`, covering job sorting, JWT generation, authorization filter behavior, and API responses.
 
