@@ -25,7 +25,7 @@ class JwtServiceTest {
     void setUp() {
         jwtService = new JwtService();
         // @Value fields are not injected outside a Spring context,
-        // so we set the private field directly for testing purposes.
+        // so the private field is set directly here for testing purposes.
         ReflectionTestUtils.setField(jwtService, "SECRET_KEY", TEST_SECRET);
     }
 
