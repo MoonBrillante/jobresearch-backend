@@ -1,6 +1,6 @@
 # 💻 Job Research Application
 
-Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, description, application URL, salary, and source/origin tracking. It provides REST APIs for the React frontend, supports JWT-based authentication, role-based access control, CRUD operations, paginated job retrieval, backend sorting, and field-based dynamic filtering using Spring Data JPA Specification. Job records are populated both through manual entry from the frontend and through an automated n8n scraping pipeline. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
+Job Research Application is a Spring Boot backend for managing job opportunity records, including position, company, location, skills, work mode, status, posted date, description, application URL, salary, and source. It provides REST APIs for the React frontend, supports JWT authentication, role-based access control, CRUD operations, server-side pagination and sorting, and field-based dynamic filtering using Spring Data JPA Specification. Job records are populated both through manual entry from the frontend and through an automated n8n workflow that collects job listings from multiple sources. The backend is packaged as a Docker container, deployed on Render, and integrates with PostgreSQL.
 
 
 ---
@@ -19,7 +19,7 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 
 ## 🔐 Authentication & Roles
 
-- JWT-based authentication
+- JWT authentication
 - Two roles:
     - `USER`: can view jobs
     - `ADMIN`: can create, update, and delete jobs
@@ -29,10 +29,10 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 ## 📦 REST API Overview
 
 | Method | Endpoint           | Access     | Description                                                                        |
-| ------ | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
-| POST   | `/login`           | Public     | Authenticates user and returns JWT token                                           |
+| ------ | ------------------ | ---------- |------------------------------------------------------------------------------------|
+| POST   | `/login`           | Public     | Authenticates the user and returns a JWT                                           |
 | GET    | `/health`          | Public     | Lightweight health check, used to wake the backend from idle on Render's free tier |
-| GET    | `/api/jobs/filter` | USER/ADMIN | Retrieve paginated job list with sorting and field-based filtering                 |
+| GET    | `/api/jobs/filter` | USER/ADMIN | Retrieves a paginated job list with sorting and field-based dynamic filtering      |
 | POST   | `/api/jobs`        | ADMIN      | Create new job entry                                                               |
 | PUT    | `/api/jobs/{id}`   | ADMIN      | Update existing job                                                                |
 | DELETE | `/api/jobs/{id}`   | ADMIN      | Delete job entry                                                                   |
@@ -40,10 +40,10 @@ Job Research Application is a Spring Boot backend for managing job opportunity r
 ---
 
 ## 🤖 Automated Job Ingestion (n8n)
-In addition to manual entry through the frontend, job records are written to this backend by an external n8n workflow that scrapes multiple job boards (Jooble, WeWorkRemotely, RemoteOK, Remotive, Himalayas) on a schedule.
+In addition to manual entry through the frontend, job records are written to this backend by an external n8n workflow that collects job listings from multiple sources (Jooble, We Work Remotely, RemoteOK, Remotive, and Himalayas)
 
 
-- The workflow authenticates against POST /login like any other client, then calls POST /api/jobs for each newly discovered listing.
+- The workflow authenticates via POST /login like any other client, then calls POST /api/jobs for each newly discovered listing.
 - The n8n integration uses the following fields:
 
   - scrapedFrom`: the platform from which the job listing was collected
@@ -56,7 +56,7 @@ In addition to manual entry through the frontend, job records are written to thi
 ---
 ### Job List Query Parameters
 
-The `/api/jobs/filter` endpoint supports pagination, sorting, and field-based filtering.
+The `/api/jobs/filter` endpoint supports pagination, sorting, and field-based dynamic filtering.
 
 Example:
 
@@ -65,21 +65,18 @@ GET /api/jobs/filter?page=0&size=10&sortBy=postedDate&sortDir=desc&position=fron
 ```
 
 
-| Parameter  | Description                     |
-| ---------- | ------------------------------- |
-| `page`     | Page number, starting from 0    |
-| `size`     | Number of records per page      |
-| `sortBy`   | Field used for sorting          |
+| Parameter  | Description             |
+| ---------- | ----------------------- |
+| `page`     | Page number, starting from 0 |
+| `size`     | Number of records per page |
+| `sortBy`   | Field used for sorting  |
 | `sortDir`  | Sort direction: `asc` or `desc` |
-| `position` | Filter jobs by position/title   |
-| `company`  | Filter jobs by company name     |
-| `location` | Filter jobs by location         |
-| `mode`     | Filter jobs by work mode        |
-| `status`   | Filter jobs by job status       |
+| `position` | Filter jobs by position |
+| `company`  | Filter jobs by company name |
+| `location` | Filter jobs by location |
+| `mode`     | Filter jobs by work mode |
+| `status`   | Filter jobs by job status |
 
----
-
-Additional job fields — `url`, `salary`, `externalJobId`, and `scrapedFrom` — are stored and returned on every job record, but are not currently exposed as filter parameters on this endpoint.
 
 ---
 
@@ -101,7 +98,7 @@ macOS / Linux:
 ./mvnw test -DskipTests=false
 ```
 
-### Test Coverage
+### Current Tests
 
 | Test Class                   | Type                           | What it verifies                                                                |
 |------------------------------|--------------------------------|---------------------------------------------------------------------------------|
@@ -110,7 +107,7 @@ macOS / Linux:
 | `JWTAuthorizationFilterTest` | Unit test (Mockito)            | Authentication is set for a valid JWT, while requests without a token remain unauthenticated and continue through the filter chain |
 | `JobControllerTest`          | Web layer test (`@WebMvcTest`) | `GET /api/jobs/{id}` returns `200 OK` with job data when found and `404 Not Found` when the job does not exist                |
 
-> **Note:** `JobresearchApplicationTests.contextLoads()` is currently disabled because `@SpringBootTest` loads the full application context and requires database configuration that is not available in the local test environment. Tests are run locally before changes are committed, while Render builds skip them to reduce deployment time.
+
 ## 🚀 Deployment
 
 The backend is deployed on Render, with PostgreSQL hosted on Supabase.
